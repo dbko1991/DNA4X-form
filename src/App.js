@@ -12,11 +12,17 @@ class App extends React.Component {
       name: '',
       address: '',
       email: '',
-      phone: ''
+      phone: '',
+      submitDisabled: true
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  
+  isFormValid = (state) => {
+    const {petName, name, address, email, phone} = state
+    return petName && name && address && email && phone
   }
 
   handleChange(event) {
@@ -27,6 +33,9 @@ class App extends React.Component {
     this.setState({
       [name]: value
     });
+    this.setState((prevState) => ({
+      submitDisabled: !this.isFormValid(prevState)
+    }));
   }
 
   handleSubmit(event) {
@@ -139,7 +148,12 @@ class App extends React.Component {
           </ul>
 
         </div>
-        <input type="submit" value="Submit" className="clipboard-btn" data-clipboard-target="#note" />
+        <input 
+        type="submit" 
+        value="Submit" 
+        className="clipboard-btn" 
+        data-clipboard-target="#note"
+        disabled={this.state.submitDisabled} />
       </form>
     );
   }
