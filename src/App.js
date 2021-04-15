@@ -161,11 +161,12 @@ const App = () => {
         </ul>
       </div>
       <div className="App-copy-area">
+        コピー要素: {state.copyZone}
         <CopyToClipboard
           text={state.copyZone}
           onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
         >
-          <button>「{state.copyZone}」をクリップボードにコピーする</button>
+          <button>コピーする</button>
         </CopyToClipboard>
       </div>
     </>
