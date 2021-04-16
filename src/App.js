@@ -8,11 +8,8 @@ const App = () => {
     hospitalName: 'A病院',
     petName: '',
     wantHospital: '',
-    tubeNum: "1本",
     name: '',
-    address: '',
     email: '',
-    phone: '',
     submitDisabled: true,
     copyZone: '',
   };
