@@ -7,6 +7,7 @@ const App = () => {
     pickMethod: '病院',
     hospitalName: 'A病院',
     petName: '',
+    wantHospital: '',
     tubeNum: "1本",
     name: '',
     address: '',
@@ -14,18 +15,17 @@ const App = () => {
     phone: '',
     submitDisabled: true,
     copyZone: '',
-    copied: false,
   };
   const [state, setState] = useState(defaultState);
 
   const isFormValid = (state) => {
-    const {petName, name, address, email, phone} = state
-    return petName && name && address && email && phone
+    const {hospitalName, petName, wantHospital, name, email} = state;
+    return hospitalName && petName && wantHospital && name && email;
   }
 
   const copyZone = (state) => {
-    const {pickMethod, hospitalName, petName} = state;
-    return `${pickMethod}/${hospitalName}/${petName}`;
+    const {hospitalName, petName, wantHospital, name, email} = state;
+    return `${name}/${email}/${hospitalName}/${petName}/${wantHospital}`;
   }
 
   const handleChange = (event) => {
@@ -53,6 +53,24 @@ const App = () => {
   return (
     <>
       <form id="main-form" onSubmit={handleSubmit}>
+        <label>
+          氏名:
+          <input
+            name="name"
+            type="text"
+            value={state.name}
+            onChange={handleChange} />
+        </label>
+
+        <label>
+          メールアドレス:
+          <input
+            name="email"
+            type="電話番号"
+            value={state.email}
+            onChange={handleChange} />
+        </label>
+
         <label>
           採取方法:
           <select
@@ -88,55 +106,23 @@ const App = () => {
         </label>
 
         <label>
-          申込チューブの本数:
-          <select
-            name="tubeNum"
-            value={state.tubeNum}
-            onChange={handleChange}>
-            <option value="1本">1本</option>
-            <option value="2本">2本</option>
-            <option value="3本">3本</option>
-            <option value="4本">4本</option>
-          </select>
-        </label>
-
-        <label>
-          氏名:
+          希望の病院
           <input
-            name="name"
+            name="wantHospital"
             type="text"
-            value={state.name}
+            value={state.wantHospital}
             onChange={handleChange} />
         </label>
 
-
-        <label>
-          住所:
-          <input
-            name="address"
-            type="text"
-            value={state.address}
-            onChange={handleChange} />
-        </label>
-
-
-        <label>
-          メールアドレス:
-          <input
-            name="email"
-            type="電話番号"
-            value={state.email}
-            onChange={handleChange} />
-        </label>
-
-        <label>
-          電話番号:
-          <input
-            name="phone"
-            type="tel"
-            value={state.phone}
-            onChange={handleChange} />
-        </label>
+        <div className="App-copy-area">
+          コピー要素: {state.copyZone}
+          <CopyToClipboard
+            text={state.copyZone}
+            onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
+          >
+            <button>コピーする</button>
+          </CopyToClipboard>
+        </div>
 
         <input
           type="submit"
@@ -145,30 +131,6 @@ const App = () => {
           data-clipboard-target="#note"
           disabled={state.submitDisabled} />
       </form>
-      <div id="note">
-        <ul>
-          <li>採取方法: {state.pickMethod}</li>
-          {
-            (state.pickMethod === '病院') &&
-            <li>病院名: {state.hospitalName}</li>
-          }
-          <li>ペットのお名前: {state.petName}</li>
-          <li>申込チューブの本数: {state.tubeNum}</li>
-          <li>氏名: {state.name}</li>
-          <li>住所: {state.address}</li>
-          <li>メールアドレス: {state.email}</li>
-          <li>電話番号: {state.phone}</li>
-        </ul>
-      </div>
-      <div className="App-copy-area">
-        コピー要素: {state.copyZone}
-        <CopyToClipboard
-          text={state.copyZone}
-          onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
-        >
-          <button>コピーする</button>
-        </CopyToClipboard>
-      </div>
     </>
   );
 }
