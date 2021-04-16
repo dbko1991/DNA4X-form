@@ -1,70 +1,92 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './App.css';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      pickMethod: '病院',
-      hospitalName: 'A病院',
-      petName: '',
-      tubeNum: "1本",
-      name: '',
-      address: '',
-      email: '',
-      phone: '',
-      submitDisabled: true
-    };
+const App = () => {
+  const defaultState = {
+    pickMethod: '病院',
+    hospitalName: 'A病院',
+    petName: '',
+    wantHospital: '',
+    name: '',
+    email: '',
+    submitDisabled: true,
+    copyZone: '',
+  };
+  const [state, setState] = useState(defaultState);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  
-  isFormValid = (state) => {
-    const {petName, name, address, email, phone} = state
-    return petName && name && address && email && phone
+  const isFormValid = (state) => {
+    const {hospitalName, petName, wantHospital, name, email} = state;
+    return hospitalName && petName && wantHospital && name && email;
   }
 
-  handleChange(event) {
+  const copyZone = (state) => {
+    const {hospitalName, petName, wantHospital, name, email} = state;
+    return `${name}/${email}/${hospitalName}/${petName}/${wantHospital}`;
+  }
+
+  const handleChange = (event) => {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    this.setState({
-      [name]: value
+    const nextState = {
+      ...state,
+      [name]: value,
+    }
+
+    setState({
+      ...nextState,
+      copyZone: copyZone(nextState),
+      submitDisabled: !isFormValid(nextState)
     });
-    this.setState((prevState) => ({
-      submitDisabled: !this.isFormValid(prevState)
-    }));
   }
 
-  handleSubmit(event) {
+  const handleSubmit = (event) => {
     window.open("https://dna4x.official.ec/items/41519433");
     event.preventDefault();
   }
 
-  render() {
-    return (
-      <form id="main-form" onSubmit={this.handleSubmit}>
+  return (
+    <>
+      <form id="main-form" onSubmit={handleSubmit}>
+        <label>
+          氏名:
+          <input
+            name="name"
+            type="text"
+            value={state.name}
+            onChange={handleChange} />
+        </label>
+
+        <label>
+          メールアドレス:
+          <input
+            name="email"
+            type="電話番号"
+            value={state.email}
+            onChange={handleChange} />
+        </label>
+
         <label>
           採取方法:
-        <select
+          <select
             name="pickMethod"
-            value={this.state.pickMethod}
-            onChange={this.handleChange}>
+            value={state.pickMethod}
+            onChange={handleChange}>
             <option value="病院">病院</option>
             <option value="ご自身">ご自身</option>
           </select>
         </label>
 
         {
-          (this.state.pickMethod === '病院') &&
+          (state.pickMethod === '病院') &&
           <label>
             病院名:
             <select
               name="pickMethod"
-              value={this.state.hospitalName}
-              onChange={this.handleChange}>
+              value={state.hospitalName}
+              onChange={handleChange}>
               <option value="A病院">A病院</option>
               <option value="B病院">B病院</option>
             </select>
@@ -76,86 +98,37 @@ class App extends React.Component {
           <input
             name="petName"
             type="text"
-            value={this.state.petName}
-            onChange={this.handleChange} />
+            value={state.petName}
+            onChange={handleChange} />
         </label>
 
         <label>
-          申込チューブの本数:
-        <select
-            name="tubeNum"
-            value={this.state.tubeNum}
-            onChange={this.handleChange}>
-            <option value="1本">1本</option>
-            <option value="2本">2本</option>
-            <option value="3本">3本</option>
-            <option value="4本">4本</option>
-          </select>
-        </label>
-
-        <label>
-          氏名:
+          希望の病院
           <input
-            name="name"
+            name="wantHospital"
             type="text"
-            value={this.state.name}
-            onChange={this.handleChange} />
+            value={state.wantHospital}
+            onChange={handleChange} />
         </label>
 
-
-        <label>
-          住所:
-          <input
-            name="address"
-            type="text"
-            value={this.state.address}
-            onChange={this.handleChange} />
-        </label>
-
-
-        <label>
-          メールアドレス:
-          <input
-            name="email"
-            type="電話番号"
-            value={this.state.email}
-            onChange={this.handleChange} />
-        </label>
-
-        <label>
-          電話番号:
-          <input
-            name="phone"
-            type="tel"
-            value={this.state.phone}
-            onChange={this.handleChange} />
-        </label>
-
-
-        <div id="note">
-          <ul>
-            <li>採取方法: {this.state.pickMethod}</li>
-            {
-              (this.state.pickMethod === '病院') && 
-              <li>病院名: {this.state.hospitalName}</li>
-            }
-            <li>ペットのお名前: {this.state.petName}</li>
-            <li>申込チューブの本数: {this.state.tubeNum}</li>
-            <li>氏名: {this.state.name}</li>
-            <li>住所: {this.state.address}</li>
-            <li>メールアドレス: {this.state.email}</li>
-            <li>電話番号: {this.state.phone}</li>
-          </ul>
-
+        <div className="App-copy-area">
+          コピー要素: {state.copyZone}
+          <CopyToClipboard
+            text={state.copyZone}
+            onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
+          >
+            <button>コピーする</button>
+          </CopyToClipboard>
         </div>
-        <input 
-        type="submit" 
-        value="Submit" 
-        className="clipboard-btn" 
-        data-clipboard-target="#note"
-        disabled={this.state.submitDisabled} />
+
+        <input
+          type="submit"
+          value="Submit"
+          className="clipboard-btn"
+          data-clipboard-target="#note"
+          disabled={state.submitDisabled} />
       </form>
-    );
-  }
+    </>
+  );
 }
 export default App;
