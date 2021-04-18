@@ -16,8 +16,8 @@ const App = () => {
   const [state, setState] = useState(defaultState);
 
   const isFormValid = (state) => {
-    const {hospitalName, petName, wantHospital, name, email} = state;
-    return hospitalName && petName && wantHospital && name && email;
+    const {hospitalName, petName, name, email} = state;
+    return hospitalName && petName && name && email;
   }
 
   const copyZone = (state) => {
@@ -49,85 +49,86 @@ const App = () => {
 
   return (
     <>
-      <form id="main-form" onSubmit={handleSubmit}>
-        <label>
-          氏名:
-          <input
-            name="name"
-            type="text"
-            value={state.name}
-            onChange={handleChange} />
-        </label>
+      <div className="container">
+        <a className="dna4x-logo" href="http://dna4x.bio/" target="_blank"><img src="./pic/dna4x-logo.png" alt=""/></a>
+        <h1>DNA4X申込フォーム</h1>
+        <form id="main-form" onSubmit={handleSubmit}>
+          <label>氏名</label>
+            <input className="textbox"
+              name="name"
+              type="text"
+              value={state.name}
+              onChange={handleChange} />
+          
 
-        <label>
-          メールアドレス:
-          <input
-            name="email"
-            type="電話番号"
-            value={state.email}
-            onChange={handleChange} />
-        </label>
+          <label>メールアドレス</label>
+            <input className="textbox"
+              name="email"
+              type="電話番号"
+              value={state.email}
+              onChange={handleChange} />
+          
 
-        <label>
-          採取方法:
-          <select
-            name="pickMethod"
-            value={state.pickMethod}
-            onChange={handleChange}>
-            <option value="病院">病院</option>
-            <option value="ご自身">ご自身</option>
-          </select>
-        </label>
-
-        {
-          (state.pickMethod === '病院') &&
-          <label>
-            病院名:
+          <label>採取方法</label>
             <select
               name="pickMethod"
-              value={state.hospitalName}
+              value={state.pickMethod}
               onChange={handleChange}>
-              <option value="A病院">A病院</option>
-              <option value="B病院">B病院</option>
+              <option value="病院">病院</option>
+              <option value="ご自身">ご自身</option>
             </select>
-          </label>
-        }
 
-        <label>
-          ペットのお名前:
-          <input
-            name="petName"
-            type="text"
-            value={state.petName}
-            onChange={handleChange} />
-        </label>
+          {
+            (state.pickMethod === '病院') &&
+            <div>
+              <label>病院名</label>
+              <select
+                name="hospitalName"
+                value={state.hospitalName}
+                onChange={handleChange}>
+                <option value="A病院">A病院</option>
+                <option value="B病院">B病院</option>
+              </select>
+            </div>
+          }
 
-        <label>
-          希望の病院
-          <input
-            name="wantHospital"
-            type="text"
-            value={state.wantHospital}
-            onChange={handleChange} />
-        </label>
+          <label>ペットのお名前</label>
+            <input className="textbox"
+              name="petName"
+              type="text"
+              value={state.petName}
+              onChange={handleChange} />
 
-        <div className="App-copy-area">
-          コピー要素: {state.copyZone}
-          <CopyToClipboard
-            text={state.copyZone}
-            onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
-          >
-            <button>コピーする</button>
-          </CopyToClipboard>
-        </div>
+          <label>希望する病院（任意）</label>
+            <input className="textbox"
+              name="wantHospital"
+              type="text"
+              value={state.wantHospital}
+              onChange={handleChange} />
+          
 
-        <input
-          type="submit"
-          value="Submit"
-          className="clipboard-btn"
-          data-clipboard-target="#note"
-          disabled={state.submitDisabled} />
-      </form>
+          {
+            (state.copyZone) &&
+            <div className="App-copy-area">
+              <p>必ず下記の内容を購入ページの備考欄にコピーしてください。</p>
+              <div className="copy-text">
+                {state.copyZone}
+                <CopyToClipboard
+                  text={state.copyZone}
+                  onCopy={() => alert(`クリップボードに「${state.copyZone}」をコピーしました！`)}
+                >
+                  <button className="copy-button" type="button">コピー</button>
+                </CopyToClipboard>
+              </div>
+            </div>
+          }
+          <input 
+            className="button"
+            type="submit"
+            value="購入ページへ"
+            disabled={state.submitDisabled} />
+        </form>
+      </div>
     </>
   );
 }
