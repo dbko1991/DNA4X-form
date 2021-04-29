@@ -110,7 +110,8 @@ const App = () => {
           {
             (state.copyZone) &&
             <div className="App-copy-area">
-              <p>必ず下記の内容を購入ページの備考欄にコピーしてください。</p>
+              <p>必ず<span className="copy-highlight">購入ページの備考欄</span>に下記の内容をコピーしてください。</p>
+              <img className="memo-img" src="./pic/memo.png" alt=""/>
               <div className="copy-text">
                 {state.copyZone}
                 <CopyToClipboard
